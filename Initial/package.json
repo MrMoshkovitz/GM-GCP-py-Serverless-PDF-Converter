@@ -1,0 +1,14 @@
+{
+    "name": "serverless-pdf-converter",
+    "version": "1.0.0",
+    "description": "This is a Cloud Based Serverless Files To PDF Converter",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "MrMoshkovitz",
+    "license": "MIT"
+  }
+  
