@@ -1,0 +1,93 @@
+* To build and deploy the REST API, use Google Cloud Build. Run this com
+======================================================================================================================================================================================
+gcloud builds submit \
+  --tag gcr.io/$GOOGLE_CLOUD_PROJECT/pdf-converter
+
+
+* Return to your code editor tab and in Cloud Shell run the following command to deploy your application:
+======================================================================================================================================================================================
+gcloud beta run deploy pdf-converter \
+  --image gcr.io/$GOOGLE_CLOUD_PROJECT/pdf-converter \
+  --platform managed \
+  --region us-central1 \
+  --no-allow-unauthenticated
+
+
+* Create the environment variable $SERVICE_URL for the app so you can easily access it:
+======================================================================================================================================================================================
+SERVICE_URL=$(gcloud beta run services describe pdf-converter --platform managed --region us-central1 --format="value(status.url)")
+echo $SERVICE_URL
+
+
+* Make an anonymous POST request to your new service
+  This will result in an error message saying "Your client does not have permission to get the URL".
+======================================================================================================================================================================================
+curl -X POST $SERVICE_URL
+
+
+* Now try invoking the service as an authorized user:
+  If you get the response "OK" you have successfully deployed a Cloud Run service. Well done!
+======================================================================================================================================================================================
+curl -X POST -H "Authorization: Bearer $(gcloud auth print-identity-token)" $SERVICE_URL
+
+
+* Run the following command to create a bucket in Cloud Storage for the uploaded docs:
+======================================================================================================================================================================================
+gsutil mb gs://$GOOGLE_CLOUD_PROJECT-upload
+
+
+* And another bucker for the processed PDFs:
+======================================================================================================================================================================================
+gsutil mb gs://$GOOGLE_CLOUD_PROJECT-processed
+
+
+* In Cloud Shell run the following command to tell Cloud Storage to send a Pub/Sub notification whenever a new file has finished uploading to the docs bucket:
+======================================================================================================================================================================================
+gsutil notification create -t new-doc -f json -e OBJECT_FINALIZE gs://$GOOGLE_CLOUD_PROJECT-upload
+
+
+* Then create a new service account which Pub/Sub will use to trigger the Cloud Run services:
+======================================================================================================================================================================================
+gcloud iam service-accounts create pubsub-cloud-run-invoker --display-name "PubSub Cloud Run Invoker"
+
+
+* Give the new service account permission to invoke the PDF converter service:
+======================================================================================================================================================================================
+gcloud beta run services add-iam-policy-binding pdf-converter --member=serviceAccount:pubsub-cloud-run-invoker@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com --role=roles/run.invoker --platform managed --region us-central1
+
+
+* Find your project number by running this command:
+======================================================================================================================================================================================
+gcloud projects list
+
+PROJECT_NUMBER=[project number]
+
+
+* Then enable your project to create Cloud Pub/Sub authentication tokens:
+======================================================================================================================================================================================
+gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member=serviceAccount:service-$PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com --role=roles/iam.serviceAccountTokenCreator
+
+
+* Finally, create a Pub/Sub subscription so that the PDF converter can run whenever a message is published on the topic "new-doc".
+======================================================================================================================================================================================
+gcloud beta pubsub subscriptions create pdf-conv-sub --topic new-doc --push-endpoint=$SERVICE_URL --push-auth-service-account=pubsub-cloud-run-invoker@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+
+
+
+* Copy some test files into your upload bucket:c
+======================================================================================================================================================================================
+gsutil -m cp gs://spls/gsp644/* gs://$GOOGLE_CLOUD_PROJECT-upload
+
+
+* Once the upload is done, return to your Cloud Console tab, open the navigation menu, and select Logging from under the Operations section.
+* In the first dropdown, filter your results to Cloud Run Revision and click Add. Then click Run Query.
+* In the Query results, look for a log entry that starts with file: and click it. It shows a dump of the file data that Pub/Sub sends to your Cloud Run service when a new file is uploaded.
+
+
+* Now return to the code editor tab and run the following command in Cloud Shell to clean up your upload directory by deleting the files in it:
+================================================
+gsutil -m rm gs://$GOOGLE_CLOUD_PROJECT-upload/*
+======================================================================================================================================
+======================================================================================================================================================================================
+======================================================================================================================================================================================
+======================================================================================================================================================================================

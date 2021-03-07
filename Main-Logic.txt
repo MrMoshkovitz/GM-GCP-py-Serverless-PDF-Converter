@@ -1,0 +1,5 @@
+    const file = decodeBase64Json(req.body.message.data);
+    await downloadFile(file.bucket, file.name);
+    const pdfFileName = await convertFile(file.name);
+    await uploadFile(process.env.PDF_BUCKET, pdfFileName);
+    await deleteFile(file.bucket, file.name);
