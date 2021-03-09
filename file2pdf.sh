@@ -2,7 +2,7 @@ GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
 echo `Google Cloud Project ${GOOGLE_CLOUD_PROJECT}`
 gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/file2pdf-converter
 gcloud beta run deploy file --image gcr.io/$GOOGLE_CLOUD_PROJECT/file2pdf-converter --platform managed --region us-central1 --no-allow-unauthenticated
-SERVICE_URL=$(gcloud beta run services describe file2pdf --platform managed --region us-central1 --format="value(status.url)")
+SERVICE_URL=$(gcloud beta run services describe file2pdf-converter --platform managed --region us-central1 --format="value(status.url)")
 echo `Service URL: ${$SERVICE_URL}`
 curl -X POST $SERVICE_URL
 curl -X POST -H "Authorization: Bearer $(gcloud auth print-identity-token)" $SERVICE_URL
