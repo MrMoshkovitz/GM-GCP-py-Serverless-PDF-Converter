@@ -99,9 +99,3 @@ uploadFile = async (bucketName, fileName) => {
 		.then(console.log("File Uploaded Successfuly"));
 };
 
-// Adding all parameters to multipart form
-var form = conversionRequest.form();
-form.append("inputFile", `/tmp/${fileName}`);
-form.append("conversionParameters", "{}");
-form.append("async", "false");
-form.append("outputFormat", "docx");
