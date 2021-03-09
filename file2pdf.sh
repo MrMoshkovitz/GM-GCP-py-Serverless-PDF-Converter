@@ -1,7 +1,7 @@
 GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
 echo "Google Cloud Project:   " + $GOOGLE_CLOUD_PROJECT
 gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/file2pdf-converter
-gcloud beta run deploy file --image gcr.io/$GOOGLE_CLOUD_PROJECT/file2pdf-converter --platform managed --region us-central1 --no-allow-unauthenticated
+gcloud beta run deploy file2pdf-converter --image gcr.io/$GOOGLE_CLOUD_PROJECT/file2pdf-converter --platform managed --region us-central1 --no-allow-unauthenticated
 SERVICE_URL=$(gcloud beta run services describe file2pdf-converter --platform managed --region us-central1 --format="value(status.url)")
 echo "Service URL:   " + $SERVICE_URL
 curl -X POST $SERVICE_URL
