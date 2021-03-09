@@ -1,14 +1,13 @@
 require("dotenv").config();
 const request = require("request");
 const https = require("https");
-const fs = require('fs');
 const { Storage } = require("@google-cloud/storage");
 const storage = new Storage();
 let formData = {};
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const { createWriteStream } = require("fs");
+const fs = require("fs");
 const app = express();
 
 app.use(bodyParser.json());
