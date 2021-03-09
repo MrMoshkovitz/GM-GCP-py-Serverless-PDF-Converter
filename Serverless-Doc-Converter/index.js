@@ -17,8 +17,8 @@ app.post("/", async (req, res) => {
 	try {
 		const file = decodeBase64Json(req.body.message.data);
 		await downloadFile(file.bucket, file.name);
-		const pdfFileName = await convertFile(file.name);
-		await uploadFile(process.env.PDF_BUCKET, pdfFileName);
+		const docxFileName = await convertFile(file.name);
+		await uploadFile(process.env.DOCX_BUCKET, docxFileName);
 		await deleteFile(file.bucket, file.name);
 	} catch (ex) {
 		console.log(`Error: ${ex}`);
@@ -32,22 +32,24 @@ function decodeBase64Json(data) {
 }
 
 async function downloadFile(bucketName, fileName) {
-	const options = { destination: `/tmp/GalFiles/${fileName}` };
+	const options = { destination: `/tmp/${fileName}` };
 	await storage.bucket(bucketName).file(fileName).download(options);
 }
 
+
+
 async function convertFile(fileName) {
 	const cmd =
-		"libreoffice --headless --convert-to pdf --outdir /tmp/GalFiles " +
-		`/tmp/GalFile/${fileName}`;
+		"lowriter --invisible --convert-to doc --outdir /tmp " +
+		`"/tmp/${fileName}"`;
 	console.log(cmd);
 	const { stdout, stderr } = await exec(cmd);
 	if (stderr) {
 		throw stderr;
 	}
 	console.log(stdout);
-	pdfFileName = fileName.replace(/\.\w+$/, ".docx");
-	return pdfFileName;
+	docxFileName = fileName.replace(/\.\w+$/, ".docx");
+	return docxFileName;
 }
 
 async function deleteFile(bucketName, fileName) {
@@ -55,5 +57,5 @@ async function deleteFile(bucketName, fileName) {
 }
 
 async function uploadFile(bucketName, fileName) {
-	await storage.bucket(bucketName).upload(`/tmp/GalFiles/${fileName}`);
+	await storage.bucket(bucketName).upload(`/tmp/${fileName}`);
 }
