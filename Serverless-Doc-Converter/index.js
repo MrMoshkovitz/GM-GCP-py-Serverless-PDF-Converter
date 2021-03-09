@@ -103,7 +103,7 @@ uploadFile = async (bucketName, fileName) => {
 var form = conversionRequest.form();
 form.append(
 	"inputFile",
-	"https://www.rocsoftware.com/pdf/ROC_Rhapsody_Optional_Modules.pdf"
+	`/tmp/${fileName}`
 );
 form.append("conversionParameters", "{}");
 form.append("async", "false");
