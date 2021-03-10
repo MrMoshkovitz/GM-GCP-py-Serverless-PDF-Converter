@@ -2,6 +2,8 @@ GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
 echo " "
 echo "Google Cloud Project: $GOOGLE_CLOUD_PROJECT"
 echo " "
+mkdir /home/gal_moshko/Files
+echo "Folder Created"
 gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/file2docx-converter
 gcloud beta run deploy file2docx-converter --image gcr.io/$GOOGLE_CLOUD_PROJECT/file2docx-converter --platform managed --region us-central1 --no-allow-unauthenticated
 SERVICE_URL=$(gcloud beta run services describe file2docx-converter --platform managed --region us-central1 --format="value(status.url)")
