@@ -46,7 +46,7 @@ async function downloadFile(bucketName, fileName) {
 
 async function convertFile(fileName) {
 	const cmd =
-		"lowriter --invisible --convert-to docx " + `"${fileName}.pdf"` + "--outdir /tmp " +
+		"lowriter --invisible --convert-to docx " + `"${fileName}"` + "--outdir /tmp " +
 		`"/tmp/${fileName}"`;
 	console.log(cmd);
 	const { stdout, stderr } = await exec(cmd);
