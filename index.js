@@ -34,7 +34,7 @@ function decodeBase64Json(data) {
 
 async function downloadFile(bucketName, fileName) {
 	console.log("Function: Download File");
-    const options = { destination: `/home/gal_moshko/Files/${fileName}` };
+    const options = { destination: `/tmp/${fileName}` };
     console.log("")
     console.log("")
     console.log("")
@@ -55,7 +55,7 @@ async function convertFile(fileName) {
 	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
 	//! sudo libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files Gal-Covid-Positive-test-results.pdf
 	
-	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files ${fileName}.pdf`
+	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /tmp ${fileName}.pdf`
 	
 	// "lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
 	// `"/tmp/${fileName}"`;
@@ -81,7 +81,7 @@ async function deleteFile(bucketName, fileName) {
 
 async function uploadFile(bucketName, fileName) {
 	console.log("Function: Upload File");
-	await storage.bucket(bucketName).upload(`/home/gal_moshko/Files/${fileName}`);
+	await storage.bucket(bucketName).upload(`/tmp/${fileName}`);
 }
 
 
