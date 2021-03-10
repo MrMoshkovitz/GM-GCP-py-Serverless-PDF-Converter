@@ -51,7 +51,7 @@ async function convertFile(fileName) {
 	//? Error: Error: source file could not be loaded
 	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
 	const cmd =
-		"lowriter --invisible --convert-to docx " + `"${fileName}"` + "--outdir /tmp " +
+		"lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
 		`"/tmp/${fileName}"`;
 	console.log(cmd);
 	const { stdout, stderr } = await exec(cmd);
