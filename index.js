@@ -55,7 +55,7 @@ async function convertFile(fileName) {
 	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
 	//! sudo libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files Gal-Covid-Positive-test-results.pdf
 	
-	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /tmp ${fileName}.pdf`
+	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /tmp /tmp/${fileName}.pdf`
 	
 	// "lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
 	// `"/tmp/${fileName}"`;
