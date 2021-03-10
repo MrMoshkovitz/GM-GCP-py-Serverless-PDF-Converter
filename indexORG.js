@@ -15,11 +15,10 @@ app.listen(port, () => {
 
 app.post("/", async (req, res) => {
 	try {
-        const file = decodeBase64Json(req.body.message.data);
-        console.log(`File Name: ${file.name}`)
+		const file = decodeBase64Json(req.body.message.data);
 		await downloadFile(file.bucket, file.name);
-		const docFileName = await convertFile(file.name);
-		await uploadFile(process.env.DOCX_BUCKET, docFileName);
+		const pdfFileName = await convertFile(file.name);
+		await uploadFile(process.env.PDF_BUCKET, pdfFileName);
 		await deleteFile(file.bucket, file.name);
 	} catch (ex) {
 		console.log(`Error: ${ex}`);
@@ -33,20 +32,13 @@ function decodeBase64Json(data) {
 }
 
 async function downloadFile(bucketName, fileName) {
-    const options = { destination: `/tmp/${fileName}` };
-    console.log("")
-    console.log("")
-    console.log("")
-    console.log("Destination", options)
-    console.log("")
-    console.log("")
-    console.log("")
+	const options = { destination: `/tmp/${fileName}` };
 	await storage.bucket(bucketName).file(fileName).download(options);
 }
 
 async function convertFile(fileName) {
 	const cmd =
-		"lowriter --invisible --convert-to docx " + `"${fileName}.pdf"` + "--outdir /tmp " +
+		"libreoffice --headless --convert-to pdf --outdir /tmp " +
 		`"/tmp/${fileName}"`;
 	console.log(cmd);
 	const { stdout, stderr } = await exec(cmd);
@@ -54,8 +46,8 @@ async function convertFile(fileName) {
 		throw stderr;
 	}
 	console.log(stdout);
-	docFileName = fileName.replace(/\.\w+$/, ".docx");
-	return docFileName;
+	pdfFileName = fileName.replace(/\.\w+$/, ".pdf");
+	return pdfFileName;
 }
 
 async function deleteFile(bucketName, fileName) {
@@ -65,22 +57,3 @@ async function deleteFile(bucketName, fileName) {
 async function uploadFile(bucketName, fileName) {
 	await storage.bucket(bucketName).upload(`/tmp/${fileName}`);
 }
-
-
-
-
-
-
-
-
-
-// gcloud builds submit \
-//   --tag gcr.io/$GOOGLE_CLOUD_PROJECT/file2docx-converter
-
-// gcloud beta run deploy file2docx-converter \
-//   --image gcr.io/$GOOGLE_CLOUD_PROJECT/file2docx-converter \
-//   --platform managed \
-//   --region us-central1 \
-//   --memory=2Gi \
-//   --no-allow-unauthenticated \
-//   --set-env-vars DOCX_BUCKET=$GOOGLE_CLOUD_PROJECT-docx-done
