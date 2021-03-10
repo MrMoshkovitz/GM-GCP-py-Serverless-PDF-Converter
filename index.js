@@ -70,7 +70,7 @@ async function convertFile(fileName) {
 	}
 	console.log("Stdout");
 	console.log(stdout);
-	docFileName = fileName
+	docFileName = fileName.replace(/\.\w+$/, ".docx");
 	return docFileName;
 }
 
