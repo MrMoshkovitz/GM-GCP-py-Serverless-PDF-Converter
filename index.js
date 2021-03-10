@@ -45,6 +45,11 @@ async function downloadFile(bucketName, fileName) {
 }
 
 async function convertFile(fileName) {
+	//! please Notice that when trying to convert file the file cannot be found!!!
+	//? Destination { destination: '/tmp/Gal-Flying-Ticket.pdf' }
+	//? lowriter --invisible --convert-to docx "Gal-Flying-Ticket.pdf"--outdir /tmp "/tmp/Gal-Flying-Ticket.pdf"
+	//? Error: Error: source file could not be loaded
+	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
 	const cmd =
 		"lowriter --invisible --convert-to docx " + `"${fileName}"` + "--outdir /tmp " +
 		`"/tmp/${fileName}"`;
