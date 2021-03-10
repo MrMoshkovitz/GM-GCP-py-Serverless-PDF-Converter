@@ -42,6 +42,7 @@ async function downloadFile(bucketName, fileName) {
     console.log("")
     console.log("")
 	await storage.bucket(bucketName).file(fileName).download(options);
+	console.log("Download Successfully");
 }
 
 async function convertFile(fileName) {
@@ -50,7 +51,9 @@ async function convertFile(fileName) {
 	//? lowriter --invisible --convert-to docx "Gal-Flying-Ticket.pdf"--outdir /tmp "/tmp/Gal-Flying-Ticket.pdf"
 	//? Error: Error: source file could not be loaded
 	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
-	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files/ ${fileName}.pdf`
+	//! sudo libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files Gal-Covid-Positive-test-results.pdf
+
+	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files ${fileName}.pdf`
 
 		// "lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
 		// `"/tmp/${fileName}"`;
@@ -59,9 +62,11 @@ async function convertFile(fileName) {
 	console.log(cmd);
 	const { stdout, stderr } = await exec(cmd);
 	if (stderr) {
+		console.log("Stderr");
 		console.log(stderr);
 		throw stderr;
 	}
+	console.log("Stdout");
 	console.log(stdout);
 	docFileName = fileName
 	return docFileName;
