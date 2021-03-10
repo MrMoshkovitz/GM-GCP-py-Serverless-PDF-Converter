@@ -33,7 +33,7 @@ function decodeBase64Json(data) {
 }
 
 async function downloadFile(bucketName, fileName) {
-    const options = { destination: `/tmp/${fileName}` };
+    const options = { destination: `/home/gal_moshko/Files/${fileName}` };
     console.log("")
     console.log("")
     console.log("")
@@ -50,7 +50,7 @@ async function convertFile(fileName) {
 	//? lowriter --invisible --convert-to docx "Gal-Flying-Ticket.pdf"--outdir /tmp "/tmp/Gal-Flying-Ticket.pdf"
 	//? Error: Error: source file could not be loaded
 	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
-	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/ ${fileName}.pdf`
+	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files/ ${fileName}.pdf`
 
 		// "lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
 		// `"/tmp/${fileName}"`;
@@ -72,7 +72,7 @@ async function deleteFile(bucketName, fileName) {
 }
 
 async function uploadFile(bucketName, fileName) {
-	await storage.bucket(bucketName).upload(`/tmp/${fileName}`);
+	await storage.bucket(bucketName).upload(`/home/gal_moshko/Files/${fileName}`);
 }
 
 
