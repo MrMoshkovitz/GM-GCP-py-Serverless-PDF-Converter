@@ -75,12 +75,12 @@ async function convertFile(fileName) {
 }
 
 async function deleteFile(bucketName, fileName) {
-	console.log("Function: Delete File");
+	console.log("Function: Delete File", fileName);
 	await storage.bucket(bucketName).file(fileName).delete();
 }
 
 async function uploadFile(bucketName, fileName) {
-	console.log("Function: Upload File");
+	console.log("Function: Upload File", fileName);
 	await storage.bucket(bucketName).upload(`/tmp/${fileName}`);
 }
 
