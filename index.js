@@ -50,16 +50,20 @@ async function convertFile(fileName) {
 	//? lowriter --invisible --convert-to docx "Gal-Flying-Ticket.pdf"--outdir /tmp "/tmp/Gal-Flying-Ticket.pdf"
 	//? Error: Error: source file could not be loaded
 	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
-	const cmd =
-		"lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
-		`"/tmp/${fileName}"`;
+	const cmd = `sudo libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/ ${fileName}.pdf`
+
+		// "lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
+		// `"/tmp/${fileName}"`;
+		// `libreoffice --infilter="writer_pdf_import" --convert-to docx ${fileName}`
+
 	console.log(cmd);
 	const { stdout, stderr } = await exec(cmd);
 	if (stderr) {
+		console.log(stderr);
 		throw stderr;
 	}
 	console.log(stdout);
-	docFileName = fileName.replace(/\.\w+$/, ".docx");
+	docFileName = fileName
 	return docFileName;
 }
 
