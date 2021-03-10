@@ -33,6 +33,7 @@ function decodeBase64Json(data) {
 }
 
 async function downloadFile(bucketName, fileName) {
+	console.log("Function: Download File");
     const options = { destination: `/home/gal_moshko/Files/${fileName}` };
     console.log("")
     console.log("")
@@ -46,19 +47,20 @@ async function downloadFile(bucketName, fileName) {
 }
 
 async function convertFile(fileName) {
+	console.log("Function: Convert File");
 	//! please Notice that when trying to convert file the file cannot be found!!!
 	//? Destination { destination: '/tmp/Gal-Flying-Ticket.pdf' }
 	//? lowriter --invisible --convert-to docx "Gal-Flying-Ticket.pdf"--outdir /tmp "/tmp/Gal-Flying-Ticket.pdf"
 	//? Error: Error: source file could not be loaded
 	//? Error: no export filter for /usr/src/app/Gal-Flying-Ticket.docx found, aborting.
 	//! sudo libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files Gal-Covid-Positive-test-results.pdf
-
+	
 	const cmd = `libreoffice --headless  --infilter="writer_pdf_import" --convert-to docx --outdir /home/gal_moshko/Files ${fileName}.pdf`
-
-		// "lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
-		// `"/tmp/${fileName}"`;
-		// `libreoffice --infilter="writer_pdf_import" --convert-to docx ${fileName}`
-
+	
+	// "lowriter --invisible --convert-to docx:writer_pdf_export " + `"${fileName}"` + "--outdir /tmp " +
+	// `"/tmp/${fileName}"`;
+	// `libreoffice --infilter="writer_pdf_import" --convert-to docx ${fileName}`
+	
 	console.log(cmd);
 	const { stdout, stderr } = await exec(cmd);
 	if (stderr) {
@@ -73,10 +75,12 @@ async function convertFile(fileName) {
 }
 
 async function deleteFile(bucketName, fileName) {
+	console.log("Function: Delete File");
 	await storage.bucket(bucketName).file(fileName).delete();
 }
 
 async function uploadFile(bucketName, fileName) {
+	console.log("Function: Upload File");
 	await storage.bucket(bucketName).upload(`/home/gal_moshko/Files/${fileName}`);
 }
 
